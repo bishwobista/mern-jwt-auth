@@ -12,7 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useFomrm} from "react-hook-form"
+import {useForm} from "react-hook-form"
+import Singup from './SignUp'
 
 function Copyright(props) {
   return (
@@ -104,7 +105,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2" >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
