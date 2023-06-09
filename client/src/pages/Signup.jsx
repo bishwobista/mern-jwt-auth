@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useForm } from "react-hook-form";
 
 function Copyright(props) {
   return (
@@ -38,7 +39,7 @@ export default function SignUp() {
     //   password: data.get('password'),
     // });
   // };
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: {errors} } = useForm();
   const onSubmit = (data) => console.log(data);
 
   return (
@@ -59,7 +60,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
+          <Box component="form"  onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -72,6 +73,7 @@ export default function SignUp() {
                   autoFocus
                   {...register("firstName", { required: true })}
                 />
+                <p>{errors.firstName?.message}</p>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
