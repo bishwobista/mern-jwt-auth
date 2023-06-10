@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const app = express();
 const port = 3000;
 
+const authRoute = require('./routes/authRoute');
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
     }
@@ -12,6 +14,8 @@ app.get('/', (req, res) => {
 dotenv.config();
 connectDB();
 
+app.use(express.json());
+app.use('/auth', authRoute);
 
 app.listen(port, () => {
     console.log(`it's live at http://localhost:${port}`);
