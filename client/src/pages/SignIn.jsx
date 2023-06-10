@@ -8,8 +8,9 @@ import LockIcon from '@mui/icons-material/Lock';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import {DevTool} from "@hookform/devtools";
+
 
 
 
@@ -53,6 +54,10 @@ export default function SignIn() {
             autoFocus
             {...register("email", {
               required: "Email is required",
+              pattern: {
+                value: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$/,
+                message: "Invalid email address",
+              },
             })}
             error={!!errors.email}
             helperText={errors?.email?.message}
@@ -68,6 +73,11 @@ export default function SignIn() {
             autoComplete="current-password"
             {...register("password", {
               required: "Password is required",
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message:
+                  "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+              },
             })}
             error={!!errors.password}
             helperText={errors?.password?.message}
