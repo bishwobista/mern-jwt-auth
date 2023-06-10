@@ -2,6 +2,19 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
+  "description": "A MERN JWT Authentication App",
+  "author": "Bishwo Bikram Bista",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "vite",
+    "javascript",
+    "mongodb",
+    "express",
+    "node",
+    "jwt"
+  ],
+  "proxy": "http://localhost:3000/",
   "type": "module",
   "scripts": {
     "dev": "vite",
