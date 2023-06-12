@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { DevTool } from "@hookform/devtools";
-import axios from "axios";
+import api from "../config/api";
 
 export default function SignUp() {
   const {
@@ -20,10 +20,6 @@ export default function SignUp() {
     formState: { errors },
   } = useForm();
 
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  // };
-
   const onSubmit = async (data) => {
     if (data.password === data.confirmPassword) {
       const userData = {
@@ -32,9 +28,8 @@ export default function SignUp() {
         password: data.password,
       };
       console.log(userData);
-      await axios
-        .post("auth/register", userData)
-        .then(log => {
+      await api.post("/auth/register", userData)
+        .then((log) => {
           if (log.data.success) {
             alert("User Registered Successfully");
           } else {
@@ -52,7 +47,7 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 7,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
