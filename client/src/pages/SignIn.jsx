@@ -10,7 +10,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useForm, Controller } from "react-hook-form";
 import {DevTool} from "@hookform/devtools";
-import axios from "axios";
+// import axios from "axios";
+import api from "../config/api";
+
 
 
 
@@ -24,7 +26,7 @@ export default function SignIn() {
   const {register, handleSubmit, formState, control} = form;
   const {errors} = formState;
   const onSubmit = data => {
-    axios.post('auth/login', data)
+    api.post("/auth/login", data)
     .then(log => {
       if(log.data.success){
         console.log(data);
