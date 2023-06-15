@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { DevTool } from "@hookform/devtools";
 import api from "../config/api";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp() {
   const {
@@ -31,19 +33,51 @@ export default function SignUp() {
       await api.post("/auth/register", userData)
         .then((log) => {
           if (log.data.success) {
-            alert("User Registered Successfully");
+            // alert("User Registered Successfully");
+            toast.success(log.data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              });
+
           } else {
-            alert("User Registration Failed");
+            // alert("User Registration Failed");
+            toast.error(log.data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              });
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      alert("Password and Confirm Password do not match");
+      // alert("Password and Confirm Password do not match");
+      toast.error("Password and Confirm Password do not match", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     }
   };
   return (
+    <>
     <Container component="main" maxWidth="xs">
       <Box
         sx={{
@@ -192,5 +226,7 @@ export default function SignUp() {
         <DevTool control={control} />
       </Box>
     </Container>
+      <ToastContainer />
+      </>
   );
 }

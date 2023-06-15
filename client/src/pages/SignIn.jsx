@@ -2,6 +2,8 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Grid from "@mui/material/Grid";
 import Avatar from '@mui/material/Avatar';
 import LockIcon from '@mui/icons-material/Lock';
@@ -30,9 +32,29 @@ export default function SignIn() {
     .then(log => {
       if(log.data.success){
         console.log(data);
-        alert(log.data.message);
+        // alert(log.data.message);
+        toast.success(log.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
       }else{
-        alert(log.data.message);
+        // alert(log.data.message);
+        toast.error(log.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
       }
     })
     .catch(err => {
@@ -117,6 +139,7 @@ export default function SignIn() {
         <DevTool control={control} />
       </Box>
     </Container>
+      <ToastContainer/>
     
     </>
   );
