@@ -1,4 +1,6 @@
 import * as React from "react";
+import { redirect } from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -26,12 +28,13 @@ export default function SignIn() {
     },
   });
   const {register, handleSubmit, formState, control} = form;
+  const navigate = useNavigate();
   const {errors} = formState;
   const onSubmit = data => {
     api.post("/auth/login", data)
     .then(log => {
       if(log.data.success){
-        console.log(data);
+        // console.log(data);
         // alert(log.data.message);
         toast.success(log.data.message, {
           position: "top-right",
@@ -43,7 +46,10 @@ export default function SignIn() {
           progress: undefined,
           theme: "light",
           });
-      }else{
+          localStorage.setItem("data", JSON.stringify(log.data.token));
+          // navigate
+          navigate("/home");
+        }else{
         // alert(log.data.message);
         toast.error(log.data.message, {
           position: "top-right",
