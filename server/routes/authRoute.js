@@ -4,6 +4,6 @@ const {registerUser, loginUser, userData} = require('../controllers/authControll
 const authMiddleware = require('../config/authMiddleware');
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.post('/userdata', authMiddleware, userData);
+router.get('/userdata', authMiddleware, userData);
 // router.post('/userdata', (req, res) => res.send({success: true, message: "Authorized"}));
 module.exports = router;
