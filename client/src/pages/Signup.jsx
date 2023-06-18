@@ -29,7 +29,7 @@ export default function SignUp() {
         email: data.email,
         password: data.password,
       };
-      console.log(userData);
+      // console.log(userData);
       await api
         .post("/auth/register", userData)
         .then((log) => {
