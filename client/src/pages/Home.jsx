@@ -42,12 +42,55 @@
 // };
 
 // export default Home;
-import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Grid, Box, AppBar, Toolbar, IconButton } from '@mui/material';
-import { Logout, Lock } from '@mui/icons-material';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+} from "@mui/material";
+import { Logout, Lock } from "@mui/icons-material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../config/api";
 
 const Home = () => {
-  const handleLogout = () => {};
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleLogout = () => {
+    localStorage.removeItem("data");
+    navigate("/");
+  };
+
+  const loadData = async () => {
+    
+      const token = await JSON.parse(localStorage.getItem("data"));
+      const res = await api.get("/auth/userdata", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.success) {
+        setName(res.data.data);
+        setEmail(res.data.data);
+      } else {
+        useEffect(() => {
+          navigate("/");
+        });
+      }
+    
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <Container maxWidth="md">
@@ -63,48 +106,51 @@ const Home = () => {
       </AppBar>
 
       <Box sx={{ marginTop: 4 }}>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom>
-              Welcome, John Doe
+              Welcome, {name?.user}
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
-              Email: john.doe@example.com
+              Email: {name?.email}
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              label="Current Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="New Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Confirm New Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" startIcon={<Lock />}>
-              Change Password
-            </Button>
+            <Box component="form" noValidate>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <TextField
+                    label="Current Password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="New Password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="Confirm New Password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item sx={{ textAlign: "center" }}>
+                  <Button variant="contained" startIcon={<Lock />}>
+                    Change Password
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
       </Box>
