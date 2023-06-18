@@ -48,4 +48,14 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const userData = async (req, res) => {
+  try{
+    res.status(200).send({success: true, data: req.body.user});
+  }
+  catch(error){
+    res.status(400).send({success: false, error: error});
+  }
+  
+}
+
+module.exports = { registerUser, loginUser, userData };
