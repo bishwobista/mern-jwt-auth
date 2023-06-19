@@ -57,5 +57,30 @@ const userData = async (req, res) => {
   }
   
 }
+const updateUser = async (req, res) => {
+  const { updateUser } = req.body;
+  const email = updateUser.email;
+  const user = await user.findOne({ email });
+  if (user && (await bcrypt.compare(updateUser.cupassword, user.password))) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(updateUser.password, salt);
+    User.findByIdAndUpdate(
+      user._id,
+      { name: updateUser.name,email: updateUser.email, password: hash },
+      (err, doc) => {
+        if (err) {
+          return res.status(400).send({ success: false, message: err });
+        } else {
+          return res
+            .status(200)
+            .send({ success: true, message: "User updated" });
+        }
+      }
+    );
 
-module.exports = { registerUser, loginUser, userData };
+  }else{
+    return res.status(400).send({ success: false, message: "User not updated" });
+  }
+}
+
+module.exports = { registerUser, loginUser, userData, updateUser };
