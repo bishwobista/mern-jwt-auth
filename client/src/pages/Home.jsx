@@ -55,19 +55,82 @@ import {
   IconButton,
 } from "@mui/material";
 import { Logout, Lock } from "@mui/icons-material";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import api from "../config/api";
+import {useForm} from 'react-hook-form'
+import { set } from "mongoose";
+
 
 const Home = () => {
+
+  const {register, handleSubmit, formState} = useForm();
+  const {errors} = formState;
+
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  
 
   const handleLogout = () => {
     localStorage.removeItem("data");
     navigate("/");
   };
+
+  const updateSubmit = async (data) => {
+    if(data.password == data.cpassword){
+      const updateUser = {
+        email: name.email,
+        password: data.password,
+        cupassword: data.cupassword,
+      };
+      api.post("/auth/update", {updateUser})
+      .then(res => {
+        if(res.data.success){
+          toast.success(res.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+            });
+            localStorage.removeItem("data");
+            setTimeout(() => {
+              navigate("/");
+            }, 5000);
+        }else{
+          toast.error(res.data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+            });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+        
+    }else{
+      toast.error("Passwords doesn't match", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+        });
+    }
+
+  }
 
   const loadData = async () => {
     
@@ -118,14 +181,58 @@ const Home = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box component="form" noValidate>
+            <Box component="form" noValidate onSubmit={handleSubmit(updateSubmit)}>
               <Grid container direction="column" spacing={2}>
+              <Grid item>
+                  <TextField
+                    label="Name"
+                  InputLabelProps={
+                    {shrink: "true"}
+                  }
+                    
+                    type="text"
+                    variant="outlined"
+                    fullWidth
+                    
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    value={name?.user}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="Email"
+                    InputLabelProps={
+                      {shrink: true}
+                    }
+                    type="email"
+                    shrink={true}
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    value={name?.email}
+                  />
+                </Grid>
                 <Grid item>
                   <TextField
                     label="Current Password"
                     type="password"
                     variant="outlined"
                     fullWidth
+                    {...register("cupassword", {
+                      required: "Password is required",
+                      pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        message:
+                          "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+                      },
+                    })}
+                    value={name?.password}
+                    error={!!errors.cupassword}
+                    helperText={errors?.cupassword?.message}
                   />
                 </Grid>
                 <Grid item>
@@ -134,6 +241,16 @@ const Home = () => {
                     type="password"
                     variant="outlined"
                     fullWidth
+                    {...register("password", {
+                      required: "Password is required",
+                      pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        message:
+                          "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+                      },
+                    })}
+                    error={!!errors.password}
+                    helperText={errors?.password?.message}
                   />
                 </Grid>
                 <Grid item>
@@ -142,6 +259,16 @@ const Home = () => {
                     type="password"
                     variant="outlined"
                     fullWidth
+                    {...register("cpassword", {
+                      required: "Password is required",
+                      pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        message:
+                          "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+                      },
+                    })}
+                    error={!!errors.cpassword}
+                    helperText={errors?.cpassword?.message}
                   />
                 </Grid>
                 <Grid item sx={{ textAlign: "center" }}>
@@ -154,6 +281,7 @@ const Home = () => {
           </Grid>
         </Grid>
       </Box>
+      <ToastContainer/>
     </Container>
   );
 };
