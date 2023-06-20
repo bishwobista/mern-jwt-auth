@@ -55,24 +55,21 @@ import {
   IconButton,
 } from "@mui/material";
 import { Logout, Lock } from "@mui/icons-material";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import api from "../config/api";
-import {useForm} from 'react-hook-form'
-import { set } from "mongoose";
-
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 
 const Home = () => {
-
-  const {register, handleSubmit, formState} = useForm();
-  const {errors} = formState;
+  const { register, handleSubmit, formState, control } = useForm();
+  const { errors } = formState;
 
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  
 
   const handleLogout = () => {
     localStorage.removeItem("data");
@@ -80,45 +77,46 @@ const Home = () => {
   };
 
   const updateSubmit = async (data) => {
-    if(data.password == data.cpassword){
+    if (data.password == data.cpassword) {
       const updateUser = {
         email: name.email,
         password: data.password,
         cupassword: data.cupassword,
       };
-      api.post("/auth/update", {updateUser})
-      .then(res => {
-        if(res.data.success){
-          toast.success(res.data.message, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
+      
+      api
+        .post("/auth/update", { updateUser })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "light",
             });
             localStorage.removeItem("data");
             setTimeout(() => {
               navigate("/");
             }, 5000);
-        }else{
-          toast.error(res.data.message, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
+          } else {
+            toast.error(res.data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "light",
             });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-        
-    }else{
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
       toast.error("Passwords doesn't match", {
         position: "top-right",
         autoClose: 5000,
@@ -127,28 +125,26 @@ const Home = () => {
         pauseOnHover: true,
         draggable: true,
         theme: "light",
-        });
+      });
     }
-
-  }
+  };
 
   const loadData = async () => {
-    
-      const token = await JSON.parse(localStorage.getItem("data"));
-      const res = await api.get("/auth/userdata", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const token = await JSON.parse(localStorage.getItem("data"));
+
+    const res = await api.get("/auth/userdata", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.data.success) {
+      setName(res.data.data);
+      setEmail(res.data.data);
+    } else {
+      useEffect(() => {
+        navigate("/");
       });
-      if (res.data.success) {
-        setName(res.data.data);
-        setEmail(res.data.data);
-      } else {
-        useEffect(() => {
-          navigate("/");
-        });
-      }
-    
+    }
   };
 
   useEffect(() => {
@@ -181,39 +177,42 @@ const Home = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Box component="form" noValidate onSubmit={handleSubmit(updateSubmit)}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit(updateSubmit)}
+            >
               <Grid container direction="column" spacing={2}>
-              <Grid item>
+                <Grid item>
                   <TextField
                     label="Name"
-                  InputLabelProps={
-                    {shrink: "true"}
-                  }
-                    
+                    // InputLabelProps={
+                    //   {shrink: "true"}
+                    // }
+                    autoComplete="name"
                     type="text"
                     variant="outlined"
                     fullWidth
-                    
                     InputProps={{
                       readOnly: true,
                     }}
-                    value={name?.user}
+                    // value={name?.user}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
                     label="Email"
-                    InputLabelProps={
-                      {shrink: true}
-                    }
+                    // InputLabelProps={
+                    //   {shrink: true}
+                    // }
                     type="email"
-                    shrink={true}
+                    autoComplete="email"
                     variant="outlined"
                     fullWidth
                     InputProps={{
                       readOnly: true,
                     }}
-                    value={name?.email}
+                    // value={name?.email}
                   />
                 </Grid>
                 <Grid item>
@@ -222,15 +221,17 @@ const Home = () => {
                     type="password"
                     variant="outlined"
                     fullWidth
+                    autoComplete="current-password"
                     {...register("cupassword", {
                       required: "Password is required",
                       pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                         message:
                           "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
                       },
                     })}
-                    value={name?.password}
+                    
                     error={!!errors.cupassword}
                     helperText={errors?.cupassword?.message}
                   />
@@ -241,10 +242,12 @@ const Home = () => {
                     type="password"
                     variant="outlined"
                     fullWidth
+                    autoComplete="new-password"
                     {...register("password", {
                       required: "Password is required",
                       pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                         message:
                           "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
                       },
@@ -259,10 +262,12 @@ const Home = () => {
                     type="password"
                     variant="outlined"
                     fullWidth
+                    autoComplete="confirm-password"
                     {...register("cpassword", {
                       required: "Password is required",
                       pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        value:
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                         message:
                           "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
                       },
@@ -272,16 +277,21 @@ const Home = () => {
                   />
                 </Grid>
                 <Grid item sx={{ textAlign: "center" }}>
-                  <Button variant="contained" startIcon={<Lock />}>
+                  <Button
+                    variant="contained"
+                    startIcon={<Lock />}
+                    type="submit"
+                  >
                     Change Password
                   </Button>
                 </Grid>
               </Grid>
             </Box>
+            <DevTool control={control} />
           </Grid>
         </Grid>
       </Box>
-      <ToastContainer/>
+      <ToastContainer />
     </Container>
   );
 };

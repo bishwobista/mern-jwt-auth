@@ -26,7 +26,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (user && (await bcrypt.compare(password, user.password))) { 
+    if (user && (await bcrypt.compare(password, user.password))) {
       const tokenData = {
         id: user._id,
         user: user.name,
@@ -35,9 +35,10 @@ const loginUser = async (req, res) => {
       const token = jwt.sign(tokenData, "secret key", {
         expiresIn: "30d",
       });
-      
 
-      return res.status(200).send({ success: true, message: "User logged in" , token: token});
+      return res
+        .status(200)
+        .send({ success: true, message: "User logged in", token: token });
     } else {
       return res.send({ success: false, message: "User not logged in" });
     }
@@ -49,19 +50,23 @@ const loginUser = async (req, res) => {
 };
 
 const userData = async (req, res) => {
-  try{
-    res.status(200).send({success: true, data: req.body.user});
+  try {
+    res.status(200).send({ success: true, data: req.body.user });
+  } catch (error) {
+    res.status(400).send({ success: false, error: error });
   }
-  catch(error){
-    res.status(400).send({success: false, error: error});
-  }
-  
-}
+};
+
+
+
+
 const updateUser = async (req, res) => {
   const { updateUser } = req.body;
+
   const email = updateUser.email;
-  const user = await user.findOne({ email });
-  if (user && (await bcrypt.compare(updateUser.cupassword, user.password))) {
+  const userExists = await User.findOne({ email });
+
+  if (userExists && (await bcrypt.compare(updateUser.cupassword, userExists.password))) {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(updateUser.password, salt);
     User.findByIdAndUpdate(
@@ -77,10 +82,12 @@ const updateUser = async (req, res) => {
         }
       }
     );
-
+    res.send("hello")
   }else{
     return res.status(400).send({ success: false, message: "User not updated" });
   }
-}
+};
+
+
 
 module.exports = { registerUser, loginUser, userData, updateUser };
