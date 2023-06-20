@@ -1,47 +1,3 @@
-// import {
-//   Avatar,
-//   Box,
-//   Container,
-//   FormControl,
-//   FormControlLabel,
-//   Grid,
-//   Typography,
-// } from "@mui/material";
-// import { Input, InputLabel, FormHelperText } from "@mui/material";
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-// import React from "react";
-
-// const Home = () => {
-//   const updateSubmit = () => {};
-//   return (
-//     <>
-//       <Container maxWidth="lg">
-//         <Box sx={{ my: 4 }}>
-//           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-//             <AccountCircleIcon />
-//           </Avatar>
-//           <Typography variant="h3" component="h1" gutterBottom>
-//             Welcome User
-//           </Typography>
-//           <FormControl>
-//             <Grid container spacing={2} my={1}>
-//               <Grid item xs={12} sm={6}>
-//                 <InputLabel htmlFor="my-email">Email address</InputLabel>
-//                 <Input id="my-email" aria-describedby="my-email-helper-text" />
-//                 <FormHelperText id="my-email-helper-text">
-//                   update your Email
-//                 </FormHelperText>
-//               </Grid>
-//             </Grid>
-//           </FormControl>
-//         </Box>
-//       </Container>
-//        {/* name email readonly */}
-//     </>
-//   );
-// };
-
-// export default Home;
 import React, { useState, useEffect } from "react";
 import {
   Container,
@@ -64,61 +20,54 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 
 const Home = () => {
-  const { register, handleSubmit, formState, control } = useForm();
-  const { errors } = formState;
-
+  const [name, setName] = useState(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
 
-  const handleLogout = () => {
-    localStorage.removeItem("data");
-    navigate("/");
-  };
-  
-
-  const updateSubmit = data => {
-    if (data.password == data.cpassword) {
+  const updateSubmit = async (data) => {
+    console.log(data);
+    if (data.password === data.cpassword) {
       const updateUser = {
-        // email: name.email,
-        email: email,
+        email: name.email,
         password: data.password,
         cupassword: data.cupassword,
       };
-      console.log(updateUser);
-      
-      // api.post("/auth/update", { updateUser })
-      //   .then((res) => {
-      //     if (res.data.success) {
-      //       toast.success(res.data.message, {
-      //         position: "top-right",
-      //         autoClose: 5000,
-      //         hideProgressBar: false,
-      //         closeOnClick: true,
-      //         pauseOnHover: true,
-      //         draggable: true,
-      //         theme: "light",
-      //       });
-      //       localStorage.removeItem("data");
-      //       setTimeout(() => {
-      //         navigate("/");
-      //       }, 5000);
-      //     } else {
-      //       toast.error(res.data.message, {
-      //         position: "top-right",
-      //         autoClose: 5000,
-      //         hideProgressBar: false,
-      //         closeOnClick: true,
-      //         pauseOnHover: true,
-      //         draggable: true,
-      //         theme: "light",
-      //       });
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-      
+      api
+        .post("/auth/update", { updateUser })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "light",
+            });
+            localStorage.removeItem("data");
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 3500);
+          } else {
+            toast.error(res.data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              theme: "light",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       toast.error("Passwords doesn't match", {
         position: "top-right",
@@ -131,31 +80,34 @@ const Home = () => {
       });
     }
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem("data");
+    navigate("/");
+  };
   const loadData = async () => {
-    const token = await JSON.parse(localStorage.getItem("data"));
-
     try {
+      const token = await JSON.parse(localStorage.getItem("data"));
+      // console.log(token);
       const res = await api.get("/auth/userdata", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+      // console.log(res.data)
       if (res.data.success) {
-        setName(res.data.data.user);
-        setEmail(res.data.data.email);
+        setName(res.data.data);
       } else {
         navigate("/");
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     loadData();
   }, []);
+
   return (
     <Container maxWidth="md">
       <AppBar position="static">
@@ -173,16 +125,16 @@ const Home = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom>
-              Welcome, 
-              {/* {name?.user} */}
-              {name}
+              Welcome,
+              {name?.user}
+              {/* {name} */}
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
-              Email: 
-              {/* {name?.email} */}
-              {email}
+              Email:
+              {name?.email}
+              {/* {email} */}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -205,8 +157,8 @@ const Home = () => {
                     InputProps={{
                       readOnly: true,
                     }}
-                    value={name}
-                    // value={name?.user}
+                    // value={name}
+                    value={name?.user}
                   />
                 </Grid>
                 <Grid item>
@@ -219,11 +171,11 @@ const Home = () => {
                     autoComplete="email"
                     variant="outlined"
                     fullWidth
-                    value={email}
+                    // value={email}
                     InputProps={{
                       readOnly: true,
                     }}
-                    // value={name?.email}
+                    value={name?.email}
                   />
                 </Grid>
                 <Grid item>
@@ -242,7 +194,6 @@ const Home = () => {
                           "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character",
                       },
                     })}
-                    
                     error={!!errors.cupassword}
                     helperText={errors?.cupassword?.message}
                   />
@@ -308,3 +259,4 @@ const Home = () => {
 };
 
 export default Home;
+
