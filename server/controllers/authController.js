@@ -1,6 +1,7 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mailSender = require("../config/mailSender");
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   const userExists = await User.findOne({ email });
@@ -18,9 +19,11 @@ const registerUser = async (req, res) => {
     });
     // const newUser = new User({ name, email, password });
     // await newUser.save();
+    await mailSender(newUser, "verify-account");
     return res.status(200).send({ success: true, message: "User registered" });
   }
 };
+
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -81,5 +84,6 @@ const updateUser = async (req, res) => {
     return res.send({ msg: "No user or something went wrong" });
   }
 };
+
 
 module.exports = { registerUser, loginUser, userData, updateUser };

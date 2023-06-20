@@ -24,6 +24,7 @@ const Home = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
@@ -147,9 +148,9 @@ const Home = () => {
                 <Grid item>
                   <TextField
                     label="Name"
-                    // InputLabelProps={
-                    //   {shrink: "true"}
-                    // }
+                    InputLabelProps={
+                      {shrink: "true"}
+                    }
                     autoComplete="name"
                     type="text"
                     variant="outlined"
@@ -164,9 +165,9 @@ const Home = () => {
                 <Grid item>
                   <TextField
                     label="Email"
-                    // InputLabelProps={
-                    //   {shrink: true}
-                    // }
+                    InputLabelProps={
+                      {shrink: true}
+                    }
                     type="email"
                     autoComplete="email"
                     variant="outlined"
