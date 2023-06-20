@@ -75,47 +75,50 @@ const Home = () => {
     localStorage.removeItem("data");
     navigate("/");
   };
+  
 
-  const updateSubmit = async (data) => {
+  const updateSubmit = data => {
     if (data.password == data.cpassword) {
       const updateUser = {
-        email: name.email,
+        // email: name.email,
+        email: email,
         password: data.password,
         cupassword: data.cupassword,
       };
+      console.log(updateUser);
       
-      api
-        .post("/auth/update", { updateUser })
-        .then((res) => {
-          if (res.data.success) {
-            toast.success(res.data.message, {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              theme: "light",
-            });
-            localStorage.removeItem("data");
-            setTimeout(() => {
-              navigate("/");
-            }, 5000);
-          } else {
-            toast.error(res.data.message, {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              theme: "light",
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // api.post("/auth/update", { updateUser })
+      //   .then((res) => {
+      //     if (res.data.success) {
+      //       toast.success(res.data.message, {
+      //         position: "top-right",
+      //         autoClose: 5000,
+      //         hideProgressBar: false,
+      //         closeOnClick: true,
+      //         pauseOnHover: true,
+      //         draggable: true,
+      //         theme: "light",
+      //       });
+      //       localStorage.removeItem("data");
+      //       setTimeout(() => {
+      //         navigate("/");
+      //       }, 5000);
+      //     } else {
+      //       toast.error(res.data.message, {
+      //         position: "top-right",
+      //         autoClose: 5000,
+      //         hideProgressBar: false,
+      //         closeOnClick: true,
+      //         pauseOnHover: true,
+      //         draggable: true,
+      //         theme: "light",
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      
     } else {
       toast.error("Passwords doesn't match", {
         position: "top-right",
@@ -132,25 +135,27 @@ const Home = () => {
   const loadData = async () => {
     const token = await JSON.parse(localStorage.getItem("data"));
 
-    const res = await api.get("/auth/userdata", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (res.data.success) {
-      setName(res.data.data);
-      setEmail(res.data.data);
-    } else {
-      useEffect(() => {
-        navigate("/");
+    try {
+      const res = await api.get("/auth/userdata", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      
+      if (res.data.success) {
+        setName(res.data.data.user);
+        setEmail(res.data.data.email);
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   useEffect(() => {
     loadData();
   }, []);
-
   return (
     <Container maxWidth="md">
       <AppBar position="static">
@@ -168,12 +173,16 @@ const Home = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom>
-              Welcome, {name?.user}
+              Welcome, 
+              {/* {name?.user} */}
+              {name}
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
-              Email: {name?.email}
+              Email: 
+              {/* {name?.email} */}
+              {email}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -196,6 +205,7 @@ const Home = () => {
                     InputProps={{
                       readOnly: true,
                     }}
+                    value={name}
                     // value={name?.user}
                   />
                 </Grid>
@@ -209,6 +219,7 @@ const Home = () => {
                     autoComplete="email"
                     variant="outlined"
                     fullWidth
+                    value={email}
                     InputProps={{
                       readOnly: true,
                     }}

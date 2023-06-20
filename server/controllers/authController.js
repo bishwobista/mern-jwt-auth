@@ -65,28 +65,29 @@ const updateUser = async (req, res) => {
 
   const email = updateUser.email;
   const userExists = await User.findOne({ email });
-
-  if (userExists && (await bcrypt.compare(updateUser.cupassword, userExists.password))) {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(updateUser.password, salt);
-    User.findByIdAndUpdate(
-      user._id,
-      { name: updateUser.name,email: updateUser.email, password: hash },
-      (err, doc) => {
-        if (err) {
-          return res.status(400).send({ success: false, message: err });
-        } else {
-          return res
-            .status(200)
-            .send({ success: true, message: "User updated" });
-        }
-      }
-    );
-    res.send("hello")
-  }else{
-    return res.status(400).send({ success: false, message: "User not updated" });
-  }
+  console.log(userExists)
+  // if (userExists && (await bcrypt.compare(updateUser.cupassword, userExists.password))) {
+  //   const salt = await bcrypt.genSalt(10);
+  //   const hash = await bcrypt.hash(updateUser.password, salt);
+  //   User.findByIdAndUpdate(
+  //     user._id,
+  //     { name: updateUser.name,email: updateUser.email, password: hash },
+  //     (err, doc) => {
+  //       if (err) {
+  //         return res.status(400).send({ success: false, message: err });
+  //       } else {
+  //         return res
+  //           .status(200)
+  //           .send({ success: true, message: "User updated" });
+  //       }
+  //     }
+  //   );
+    
+  // }else{
+  //   return res.status(400).send({ success: false, message: "User not updated" });
+  // }
 };
+
 
 
 
