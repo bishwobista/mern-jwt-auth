@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 module.exports = async (data, mailType) => {
   try {
@@ -8,17 +9,21 @@ module.exports = async (data, mailType) => {
       secure: true, // use SSL
       auth: {
         user: process.env.APP_EMAIL, // email
-        pass: process.env.APP_PASS, //app password
+        pass: process.env.APP_PASSWORD, // Google App Password
       },
     });
+
     const mailOptions = {
-      from: "bishwo5bista@gmail.com",
+      from: process.env.APP_EMAIL, // use the configured email address
       to: data.email,
       subject: "Account Verification",
       html: `<h1>Hi ${data.name}</h1>
         <p>Your account has been ${mailType} successfully</p>`,
     };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
   } catch (error) {
-    console.log(error);
+    console.log("Error occurred while sending email:", error);
   }
 };
