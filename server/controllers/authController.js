@@ -19,11 +19,12 @@ const registerUser = async (req, res) => {
     });
     // const newUser = new User({ name, email, password });
     // await newUser.save();
-    await mailSender(newUser, "verify-account");
+
+    await mailSender(newUser, "verified");
+
     return res.status(200).send({ success: true, message: "User registered" });
   }
 };
-
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -73,10 +74,12 @@ const updateUser = async (req, res) => {
       await User.findByIdAndUpdate(user._id, {
         name: updateUser.name,
         email: updateUser.email,
-        password: hashedPassword
+        password: hashedPassword,
       });
 
-      return res.status(200).send({ success: true, msg: "Password updated successfully" });
+      return res
+        .status(200)
+        .send({ success: true, msg: "Password updated successfully" });
     } catch (err) {
       return res.status(400).send({ msg: "Something went wrong" });
     }
@@ -84,6 +87,5 @@ const updateUser = async (req, res) => {
     return res.send({ msg: "No user or something went wrong" });
   }
 };
-
 
 module.exports = { registerUser, loginUser, userData, updateUser };
