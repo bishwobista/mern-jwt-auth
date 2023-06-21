@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+const Token = require("../models/tokenModel");
+const bycrypt = require("bcryptjs");
 
 module.exports = async (data, mailType) => {
   try {
@@ -13,12 +15,20 @@ module.exports = async (data, mailType) => {
       },
     });
 
+    const verifyToken = await bycrypt.hash(data._id.toString(), 10);
+    verifyToken = verifyToken.replaceAll("/", "");
+    const token = new Token({
+      userid: data._id,
+      token: verifyToken,
+    });
+    await token.save()
+    const content = `<h1>Please click on the link below to verify your account</h1>
+    <a href="http://localhost:3000/verify/${verifyToken}">Verify Account</a>`
     const mailOptions = {
       from: process.env.APP_EMAIL, // use the configured email address
       to: data.email,
       subject: "Account Verification",
-      html: `<h1>Hi ${data.name}</h1>
-        <p>Your account has been ${mailType} successfully</p>`,
+      html: content
     };
 
     const info = await transporter.sendMail(mailOptions);
