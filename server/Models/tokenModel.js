@@ -10,6 +10,9 @@ const tokenSchema = mongoose.Schema({
         required: true,
         type: String
     }
-})
+},
+{ timestamps: true }
+)
 
-module.exports = mongoose.model("Token", tokenSchema);
+const Token = mongoose.model("token", tokenSchema);
+module.exports = Token;
