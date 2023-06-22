@@ -88,4 +88,16 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, userData, updateUser };
+const verifyMail = async (req, res) => {  
+  const tokenDetail = await Token.findOne({ token: req.body.token });
+
+  if(tokenDetail) {
+    await User.findOneAndUpdate({ _id: tokenDetail.userId }, { isVerified: true });
+    await Token.findOneAndDelete({ token: req.body.token });
+    return res.send({ success:true,msg: "Account verified" });
+  }else {
+    return res.send({ success:false,msg: "Something went wrong" });
+  }
+}
+  
+module.exports = { registerUser, loginUser, userData, updateUser, verifyMail };
