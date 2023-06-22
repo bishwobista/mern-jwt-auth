@@ -16,7 +16,6 @@ module.exports = async (data, mailType) => {
     });
 
     const verifyToken = await bycrypt.hash(data._id.toString(), 10);
-    verifyToken = verifyToken.replaceAll("/", "");
     const token = new Token({
       userid: data._id,
       token: verifyToken,
