@@ -21,8 +21,8 @@ const registerUser = async (req, res) => {
     // const newUser = new User({ name, email, password });
     // await newUser.save();
 
-    await mailSender(newUser, "verified");
-
+    await mailSender(newUser, "verify-mail");
+    
     return res.status(200).send({ success: true, message: "User registered" });
   }
 };
@@ -92,7 +92,7 @@ const updateUser = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     const tokenDetail = await Token.findOne({ token: req.body.token });
-    // console.log(tokenDetail);
+    console.log(tokenDetail);
     if (tokenDetail) {
       await User.findOneAndUpdate({
         _id: tokenDetail.userid,

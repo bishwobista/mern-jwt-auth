@@ -14,9 +14,6 @@ function App() {
           <Route path='/signup'element= { <PublicRoute><SignUp /></PublicRoute> } />
           <Route path='/home'element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/verify/:token" element={<PublicRoute><VerifyEmail /></PublicRoute>} />
-          {/* <Route path='/'element={<SignIn/>  } />
-          <Route path='/signup'element= { <SignUp /> } />
-          <Route path='/home'element={<Home />} /> */}
         </Routes>
       </BrowserRouter>
     </>
