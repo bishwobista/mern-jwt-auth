@@ -20,5 +20,4 @@ module.exports = (req, res, next) => {
     }else{
         res.send({success: true, message: "Authorized"});
     }
-    
 }

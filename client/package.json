@@ -2,8 +2,8 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
-  "proxy": "http://localhost:3000/",
   "description": "A MERN JWT Authentication App",
+  "proxy": "http://localhost:3000",
   "author": "Bishwo Bikram Bista",
   "license": "MIT",
   "keywords": [
