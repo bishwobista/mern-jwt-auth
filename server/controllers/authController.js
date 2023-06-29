@@ -23,7 +23,7 @@ const registerUser = async (req, res) => {
 
     await mailSender(newUser, "verify-mail");
     
-    return res.status(200).send({ success: true, message: "User registered" });
+    return res.status(200).send({ success: true, message: "Please check your email and verify your account" });
   }
 };
 
@@ -32,20 +32,27 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const tokenData = {
-        id: user._id,
-        user: user.name,
-        email: user.email,
-      };
-      const token = jwt.sign(tokenData, "secret key", {
-        expiresIn: "30d",
-      });
-
-      return res
+      if (user.isVerified) {
+        
+        const tokenData = {
+          id: user._id,
+          user: user.name,
+          email: user.email,
+        };
+        const token = jwt.sign(tokenData, process.env.SECRET_KEY, {
+          expiresIn: "30d",
+        });
+        
+        return res
         .status(200)
         .send({ success: true, message: "User logged in", token: token });
+      }else{
+        return res
+        .status(200)
+        .send({ success: false, message: "Please verify your email" });
+      }
     } else {
-      return res.send({ success: false, message: "User not logged in" });
+      return res.send({ success: false, message: "Email is not verified" });
     }
   } catch (error) {
     return res
@@ -92,7 +99,7 @@ const updateUser = async (req, res) => {
 const verifyEmail = async (req, res) => {
   try {
     const tokenDetail = await Token.findOne({ token: req.body.token });
-    console.log(tokenDetail);
+    // console.log(tokenDetail);
     if (tokenDetail) {
       await User.findOneAndUpdate({
         _id: tokenDetail.userid,

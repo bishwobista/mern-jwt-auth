@@ -7,5 +7,5 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/userdata', authMiddleware, userData);
 router.post('/update',updateUser);
-router.post('/verify-email', verifyEmail)
+router.post('/verify-email', verifyEmail);
 module.exports = router;

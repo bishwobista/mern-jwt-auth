@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
         try {
             token = req.headers.authorization.split(" ")[1];
-            const user = jwt.verify(token, "secret key");
+            const user = jwt.verify(token, process.env.SECRET_KEY);
             req.body.user = user;
             next();
         } catch (error) {

@@ -15,13 +15,10 @@ module.exports = async (data, mailType) => {
     });
 
     // Mail Verification
-    const verifyToken = await bcrypt
-      .hashSync(data._id.toString(), 10)
-      .replaceAll("/", "");
-    const token = new Token({ userid: data._id, token: verifyToken });
-    await token.save();
-    const content = `<h1>Please click on the link below to verify your account</h1>
-             <a href="http://localhost:3000/verify/${verifyToken}">Verify Account</a>`;
+    const verifyToken = await bcrypt.hashSync(data._id.toString(), 10).replaceAll('/', '')
+        const token = new Token({ userid: data._id, token: verifyToken })
+        await token.save()
+        const content = `<div><h1>Please verify your mail by clicking this link</h1></br><a href="http://localhost:5173/verify/${verifyToken}/">Click this token</a></div>`
 
     const mailOptions = {
       from: "bishwo5bista@gmail.com",
@@ -31,7 +28,7 @@ module.exports = async (data, mailType) => {
     };
 
     const info = await mailConfig.sendMail(mailOptions);
-    console.log("Email sent:", info.response);
+    // console.log("Email sent:", info.response);
   } catch (error) {
     console.log(error);
   }
