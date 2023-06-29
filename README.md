@@ -15,54 +15,54 @@ This is a full-stack web application built using the MERN (MongoDB, Express.js, 
 
 Before running the application, ensure that you have the following installed:
 
-- Node.js (v14 or above)
+- Node.js 
 - MongoDB
 
 ## Getting Started
 
 1. Clone the repository:
 
-   ```bash
-   git clone <repository-url>
+   ```
+   git clone https://github.com/bishwobista/mern-jwt-auth.git
    ```
 
 2. Navigate to the project directory:
 
-   ```bash
+   ```
    cd mern-jwt-auth-app
    ```
 
 3. Install the dependencies for both the frontend and backend:
 
-   ```bash
+   ```
    cd client && npm install
    ```
 
-   ```bash
+   ```
    cd server && npm install
    ```
 
 4. Configuration:
 
-   - In the `server` directory, create a `.env` file based on the `.env.example` file and provide the necessary configuration values, such as your MongoDB connection string and JWT secret.
+   - In the `server` directory, create a `.env` file based on the `.env.example` file and provide the necessary configuration values, such as your MongoDB connection string JWT secret, gmail id and it's app password.
 
 5. Run the application:
 
    - To start the frontend development server, navigate to the `client` directory and run:
 
-     ```bash
+     ```
      npm run dev
      ```
 
    - To start the backend server, navigate to the `server` directory and run:
 
-     ```bash
+     ```
      npm run start
      ```
 
 6. Access the application:
 
-   - Open your browser and visit `http://localhost:3000` to access the application.
+   - Open your browser and visit `http://localhost:5173` to access the application.
 
 ## Project Structure
 
@@ -73,23 +73,25 @@ mern-jwt-auth-app/
 ├── client/
 │   ├── public/
 │   └── src/
-│       ├── assets/
-│       ├── components/
-│       ├── routes/
-│       ├── services/
-│       ├── styles/
-│       └── utils/
+│       ├── config/
+│       │   └── api.js
+│       ├── pages/
+│       │      ├── Home.jsx
+│       │      ├── SignIn.jsx
+│       │      ├── SignUp.jsx
+│       │      └── VerifyEmail.jsx
+│       ├── App.jsx/
+│       └── main.jsx/
 └── server/
+    ├── config/
     ├── controllers/
-    ├── middleware/
     ├── models/
     ├── routes/
-    ├── utils/
-    └── app.js
+    └── server.js
 ```
 
 - The `client` directory contains the frontend code, including React components, styles, routes, and services for making API requests.
-- The `server` directory contains the backend code, including Express.js routes, controllers, middleware, models, and utility functions.
+- The `server` directory contains the backend code, including Express.js routes, controllers, middleware and models functions.
 
 ## Dependencies
 
@@ -100,6 +102,8 @@ The main dependencies used in this project are:
 - React.js: JavaScript library for building user interfaces.
 - React Router: Declarative routing for React applications.
 - Axios: Promise-based HTTP client for making API requests.
+- Material-UI: UI library for React applications.
+- React Toastify: Library for displaying toast notifications.
 
 ### Backend
 
@@ -114,4 +118,4 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 
 ## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+This project is not liscened
