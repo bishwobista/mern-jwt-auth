@@ -44,7 +44,7 @@ Before running the application, ensure that you have the following installed:
 
 4. Configuration:
 
-   - In the `server` directory, create a `.env` file based on the `.env.example` file and provide the necessary configuration values, such as your MongoDB connection string JWT secret, gmail id and it's app password.
+   - In the `server` directory, create a `.env` file and provide the necessary configuration values, such as your MongoDB connection string JWT secret, gmail id and it's app password.
 
 5. Run the application:
 
